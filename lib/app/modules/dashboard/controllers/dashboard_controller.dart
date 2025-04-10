@@ -4,11 +4,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:project_ujikom/app/data/kategori_response.dart';
 import 'package:project_ujikom/app/modules/dashboard/views/index_view.dart';
 import 'package:project_ujikom/app/modules/dashboard/views/profile_view.dart';
-import 'package:project_ujikom/app/modules/dashboard/views/your_kategori_view.dart';
 import 'package:project_ujikom/app/utils/api.dart';
 
 class DashboardController extends GetxController {
-   final _getConnect = GetConnect();
+  final _getConnect = GetConnect();
   final token = GetStorage().read('token');
 
   Future<KategoriResponse> getKategori() async {
@@ -31,6 +30,7 @@ class DashboardController extends GetxController {
     final kategoriResponse = KategoriResponse.fromJson(response.body);
     yourKategoris.add(kategoriResponse);
   }
+
   var selectedIndex = 0.obs;
 
   void changeIndex(int index) {
@@ -39,13 +39,12 @@ class DashboardController extends GetxController {
 
   final List<Widget> pages = [
     IndexView(),
-    YourKategoriView(),
     ProfileView(),
   ];
 
   @override
   void onInit() {
-     getKategori();
+    getKategori();
     getYourKategori();
     super.onInit();
   }

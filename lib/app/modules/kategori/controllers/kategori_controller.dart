@@ -32,4 +32,47 @@ class KategoriController extends GetxController {
       isLoading(false);
     }
   }
+
+  Future<void> updateKategori(int id, String namaKategori) async {
+    try {
+      final response = await http.put(
+        Uri.parse('${BaseUrl.kategoris}/$id'),
+        body: {'nama': namaKategori},
+      );
+
+      if (response.statusCode == 200) {
+        fetchKategori();
+        Get.snackbar('Sukses', 'Kategori berhasil diperbarui');
+      } else {
+        Get.snackbar('Error', 'Gagal memperbarui kategori');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Terjadi kesalahan: $e');
+    }
+  }
+
+  void deleteKategori(int id) {
+    Get.defaultDialog(
+      title: 'Konfirmasi Hapus',
+      middleText: 'Apakah Anda yakin ingin menghapus kategori ini?',
+      textConfirm: 'Ya',
+      textCancel: 'Batal',
+      onConfirm: () async {
+        try {
+          final response =
+              await http.delete(Uri.parse('${BaseUrl.kategoris}/$id'));
+
+          if (response.statusCode == 200) {
+            kategoriList.removeWhere((kategori) => kategori.id == id);
+            Get.snackbar('Sukses', 'Kategori berhasil dihapus');
+          } else {
+            Get.snackbar('Error', 'Gagal menghapus kategori');
+          }
+        } catch (e) {
+          Get.snackbar('Error', 'Terjadi kesalahan: $e');
+        }
+        Get.back(); // Tutup dialog
+      },
+    );
+  }
 }

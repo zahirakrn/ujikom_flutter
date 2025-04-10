@@ -16,7 +16,7 @@ class HomeController extends GetxController {
       const Duration(seconds: 4),
       (timer) => authToken.read('token') == null
           ? Get.off(
-              () => const LoginView(),
+              () => LoginView(),
               transition: Transition.leftToRight,
             )
           : Get.off(() => const DashboardView()),
