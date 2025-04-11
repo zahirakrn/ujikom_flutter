@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
+import 'package:project_ujikom/app/modules/dashboard/views/profile_view.dart';
 
 import '../modules/barang/bindings/barang_binding.dart';
-import '../modules/barang/bindings/barang_binding.dart';
-import '../modules/barang/views/barang_view.dart';
 import '../modules/barang/views/barang_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';

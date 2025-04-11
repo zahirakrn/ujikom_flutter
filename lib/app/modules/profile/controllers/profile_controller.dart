@@ -1,42 +1,74 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
-import '../../../utils/api.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:project_ujikom/app/data/profile_response.dart';
+import 'package:project_ujikom/app/utils/api.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileController extends GetxController {
+  //TODO: Implement ProfileController
   final box = GetStorage();
-  var userProfile = {}.obs;
-  var isLoading = false.obs;
+  final _getConnect = GetConnect();
+  final token = GetStorage().read('access_token');
+  final isLoading = false.obs;
+   var profile = ProfileResponse().obs;
 
   @override
   void onInit() {
+    fetchProfile();
     super.onInit();
-    fetchUserProfile();
   }
 
-  void logout() {
-    box.remove('access_token');
-    Get.offAllNamed('/login');
-  }
-  
-  Future<void> fetchUserProfile() async {
-    isLoading(true);
-    final token = box.read('access_token');
-    final url = Uri.parse('${BaseUrl.profile}/user/profile');
-    final response = await http.get(
-      url,
-      headers: {'Authorization': 'Bearer $token'},
-    );
+  Future<void> fetchProfile() async {
+    print("TOKEN DARI STORAGE: $token");
 
-    if (response.statusCode == 200) {
-      userProfile.value = json.decode(response.body);
-    } else {
-      
+    
+    try {
+      isLoading(true);
+      final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:8000/api/profile'), 
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token', 
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        profile.value = ProfileResponse.fromJson(jsonData['data']);
+      } else {
+        print('Gagal fetch profile: ${response.body}');
+      }
+    } catch (e) {
+      print('Error fetch profile: $e');
+    } finally {
+      isLoading.value = false;
     }
-    isLoading(false);
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+  }
+
+  Future<void> logout() async {
+    try {
+      final box = GetStorage();
+      box.remove('token');
+
+      print("Berhasil logout!");
+
+      Get.offAllNamed('/login'); // arahkan ke halaman login
+    } catch (e) {
+      print("Error saat logout: $e");
+    }
   }
 }

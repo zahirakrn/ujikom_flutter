@@ -48,4 +48,5 @@ class Pembelian {
       nama: json['nama'],
     );
   }
+  
 }

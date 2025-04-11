@@ -5,5 +5,5 @@ class BaseUrl {
   static String barang = 'http://127.0.0.1:8000/api/barang';
   static String pembelian = 'http://127.0.0.1:8000/api/pembelian';
   static String transaksi= 'http://127.0.0.1:8000/api/transaksi';
-  static String profile = 'http://127.0.0.1:8000/api/user/profile';
+  static String profile = 'http://127.0.0.1:8000/api/profile';
 }

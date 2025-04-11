@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:project_ujikom/app/data/transaksi_response.dart';
-import 'package:project_ujikom/app/utils/api.dart';
 import 'dart:convert';
+
 
 class TransaksiController extends GetxController {
   var isLoading = false.obs;
@@ -17,10 +17,12 @@ class TransaksiController extends GetxController {
   Future<void> fetchTransaksi() async {
     try {
       isLoading(true);
-      final response = await http.get(Uri.parse(BaseUrl.transaksi));
+      final response =
+          await http.get(Uri.parse('http://172.20.10.4:8000/api/transaksi'));
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        transaksiList.value = data.map((e) => TransaksiResponse.fromJson(e)).toList();
+        transaksiList.value =
+            data.map((e) => TransaksiResponse.fromJson(e)).toList();
       } else {
         Get.snackbar('Error', 'Gagal mengambil data transaksi');
       }
@@ -35,7 +37,7 @@ class TransaksiController extends GetxController {
     try {
       isLoading(true);
       final response = await http.post(
-        Uri.parse(BaseUrl.transaksi),
+        Uri.parse('http://172.20.10.4:8000/api/transaksi'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(transaksiData),
       );
@@ -55,7 +57,8 @@ class TransaksiController extends GetxController {
   Future<void> deleteTransaksi(int id) async {
     try {
       isLoading(true);
-      final response = await http.delete(Uri.parse(BaseUrl.transaksi));
+      final response = await http
+          .delete(Uri.parse('http://172.20.10.4:8000/api/transaksi/$id'));
       if (response.statusCode == 200) {
         transaksiList.removeWhere((item) => item.id == id);
         Get.snackbar('Success', 'Transaksi berhasil dihapus');

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_ujikom/app/modules/transaksi/controllers/transaksi_controller.dart';
-
+import '../controllers/transaksi_controller.dart';
 
 class TransaksiView extends GetView<TransaksiController> {
   const TransaksiView({super.key});
 
   @override
   Widget build(BuildContext context) {
-     final transaksiController = Get.put(TransaksiController());
+    final controller = Get.put(TransaksiController());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daftar Transaksi'),
@@ -38,7 +37,7 @@ class TransaksiView extends GetView<TransaksiController> {
                   ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {}, 
+        onPressed: () {}, // Tambahkan navigasi ke halaman tambah transaksi nanti
         child: const Icon(Icons.add),
       ),
     );
