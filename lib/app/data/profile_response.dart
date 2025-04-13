@@ -1,10 +1,11 @@
+
 class ProfileResponse {
   int? id;
   String? name;
   String? email;
-  Null? emailVerifiedAt;
-  Null? createdAt;
-  Null? updatedAt;
+  String? emailVerifiedAt;
+  String? createdAt;
+  String? updatedAt;
 
   ProfileResponse(
       {this.id,

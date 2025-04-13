@@ -32,11 +32,9 @@ class LoginController extends GetxController {
   }
 
   void loginNow() async {
-    
     final response = await _getConnect.post(BaseUrl.login, {
-      'email': emailController.text, 
-      'password': passwordController
-          .text, 
+      'email': emailController.text,
+      'password': passwordController.text,
     });
 
     if (response.statusCode == 200) {
@@ -44,13 +42,12 @@ class LoginController extends GetxController {
       Get.offAll(() => const DashboardView());
     } else {
       Get.snackbar(
-        'Error', 
-        response.body['error']
-            .toString(), 
-        icon: const Icon(Icons.error), 
-        backgroundColor: Colors.red, 
+        'Error',
+        response.body['error'].toString(),
+        icon: const Icon(Icons.error),
+        backgroundColor: Colors.red,
         colorText: Colors.white,
-        forwardAnimationCurve: Curves.bounceIn, 
+        forwardAnimationCurve: Curves.bounceIn,
         margin: const EdgeInsets.only(
           top: 10,
           left: 5,

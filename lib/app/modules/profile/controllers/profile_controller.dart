@@ -1,74 +1,42 @@
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:project_ujikom/app/data/profile_response.dart';
-import 'package:project_ujikom/app/utils/api.dart';
-import 'package:http/http.dart' as http;
+
 
 class ProfileController extends GetxController {
-  //TODO: Implement ProfileController
-  final box = GetStorage();
-  final _getConnect = GetConnect();
-  final token = GetStorage().read('access_token');
-  final isLoading = false.obs;
-   var profile = ProfileResponse().obs;
+  var isLoading = true.obs;
+  var profile = ProfileResponse().obs;
 
   @override
   void onInit() {
-    fetchProfile();
     super.onInit();
+    fetchProfile();
   }
 
-  Future<void> fetchProfile() async {
-    print("TOKEN DARI STORAGE: $token");
-
-    
+  void fetchProfile() async {
     try {
       isLoading(true);
-      final response = await http.get(
+      var response = await http.get(
         Uri.parse(
-            'http://127.0.0.1:8000/api/profile'), 
+            "http://192.168.162.63:8000/api/profile"), // ganti sesuai endpoint Laravel kamu
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer $token', 
+          'Authorization': 'Bearer 55|gNirxqLzR4njVJDsT02CGhEsAJiuxk1bbtb0UHWocbf734bf', // Kalau pakai token
         },
       );
 
       if (response.statusCode == 200) {
-        var jsonData = json.decode(response.body);
-        profile.value = ProfileResponse.fromJson(jsonData['data']);
+        final jsonResult = json.decode(response.body);
+        profile.value = ProfileResponse.fromJson(jsonResult);
       } else {
-        print('Gagal fetch profile: ${response.body}');
+        Get.snackbar("Error", "Gagal memuat profil (${response.statusCode})");
       }
     } catch (e) {
-      print('Error fetch profile: $e');
+      Get.snackbar("Error", e.toString());
     } finally {
-      isLoading.value = false;
-    }
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  Future<void> logout() async {
-    try {
-      final box = GetStorage();
-      box.remove('token');
-
-      print("Berhasil logout!");
-
-      Get.offAllNamed('/login'); // arahkan ke halaman login
-    } catch (e) {
-      print("Error saat logout: $e");
+      isLoading(false);
     }
   }
 }
