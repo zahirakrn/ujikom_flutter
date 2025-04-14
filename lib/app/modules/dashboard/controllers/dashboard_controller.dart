@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:project_ujikom/app/data/kategori_response.dart';
 import 'package:project_ujikom/app/modules/dashboard/views/index_view.dart';
 import 'package:project_ujikom/app/modules/dashboard/views/profile_view.dart';
+import 'package:project_ujikom/app/modules/transaksi/views/transaksi_view.dart';
 import 'package:project_ujikom/app/utils/api.dart';
 
 class DashboardController extends GetxController {
@@ -40,6 +41,7 @@ class DashboardController extends GetxController {
   final List<Widget> pages = [
     IndexView(),
     ProfileView(),
+    TransaksiView(),
   ];
 
   @override

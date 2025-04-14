@@ -1,4 +1,27 @@
 class TransaksiResponse {
+  List<Data>? data;
+
+  TransaksiResponse({this.data});
+
+  TransaksiResponse.fromJson(Map<String, dynamic> json) {
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Data {
   int? id;
   String? nama;
   String? tanggal;
@@ -8,7 +31,7 @@ class TransaksiResponse {
   String? updatedAt;
   List<Barangs>? barangs;
 
-  TransaksiResponse(
+  Data(
       {this.id,
       this.nama,
       this.tanggal,
@@ -18,7 +41,7 @@ class TransaksiResponse {
       this.updatedAt,
       this.barangs});
 
-  TransaksiResponse.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nama = json['nama'];
     tanggal = json['tanggal'];
@@ -61,6 +84,7 @@ class Barangs {
   String? createdAt;
   String? updatedAt;
   Pivot? pivot;
+  Pembelian? pembelian;
 
   Barangs(
       {this.id,
@@ -72,7 +96,8 @@ class Barangs {
       this.unit,
       this.createdAt,
       this.updatedAt,
-      this.pivot});
+      this.pivot,
+      this.pembelian});
 
   Barangs.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -85,6 +110,9 @@ class Barangs {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
+    pembelian = json['pembelian'] != null
+        ? new Pembelian.fromJson(json['pembelian'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -100,6 +128,9 @@ class Barangs {
     data['updated_at'] = this.updatedAt;
     if (this.pivot != null) {
       data['pivot'] = this.pivot!.toJson();
+    }
+    if (this.pembelian != null) {
+      data['pembelian'] = this.pembelian!.toJson();
     }
     return data;
   }
@@ -136,6 +167,55 @@ class Pivot {
     data['barang_id'] = this.barangId;
     data['jumlah'] = this.jumlah;
     data['subtotal'] = this.subtotal;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+
+class Pembelian {
+  int? id;
+  String? namaPerusahaan;
+  String? nama;
+  int? jumlah;
+  int? hargaBeli;
+  String? tanggal;
+  String? alamat;
+  String? createdAt;
+  String? updatedAt;
+
+  Pembelian(
+      {this.id,
+      this.namaPerusahaan,
+      this.nama,
+      this.jumlah,
+      this.hargaBeli,
+      this.tanggal,
+      this.alamat,
+      this.createdAt,
+      this.updatedAt});
+
+  Pembelian.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    namaPerusahaan = json['nama_perusahaan'];
+    nama = json['nama'];
+    jumlah = json['jumlah'];
+    hargaBeli = json['harga_beli'];
+    tanggal = json['tanggal'];
+    alamat = json['alamat'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['nama_perusahaan'] = this.namaPerusahaan;
+    data['nama'] = this.nama;
+    data['jumlah'] = this.jumlah;
+    data['harga_beli'] = this.hargaBeli;
+    data['tanggal'] = this.tanggal;
+    data['alamat'] = this.alamat;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;

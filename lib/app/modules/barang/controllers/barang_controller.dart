@@ -67,7 +67,6 @@ class BarangController extends GetxController {
         try {
           final response =
               await http.delete(Uri.parse('${BaseUrl.barang}/$id'));
-
           if (response.statusCode == 200) {
             barangList.removeWhere((barang) => barang.id == id);
             Get.snackbar('Sukses', 'Barang berhasil dihapus');

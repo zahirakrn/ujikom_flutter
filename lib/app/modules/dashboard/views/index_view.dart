@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_ujikom/app/modules/barang/views/barang_view.dart';
+import 'package:project_ujikom/app/modules/catatankeuangan/views/catatankeuangan_view.dart';
+import 'package:project_ujikom/app/modules/catatanstok/views/catatanstok_view.dart';
 import 'package:project_ujikom/app/modules/kategori/views/kategori_view.dart';
 import 'package:project_ujikom/app/modules/pembelian/views/pembelian_view.dart';
 import 'package:project_ujikom/app/modules/transaksi/views/transaksi_view.dart';
+import 'package:project_ujikom/app/modules/penggajian/views/penggajian_view.dart';
 import '../controllers/dashboard_controller.dart';
 
 class IndexView extends GetView<DashboardController> {
@@ -70,7 +73,7 @@ class IndexView extends GetView<DashboardController> {
                     mainAxisSpacing: 10,
                     childAspectRatio: 1, // Kotak persegi
                   ),
-                  itemCount: 4,
+                  itemCount: 7,
                   itemBuilder: (context, index) {
                     final items = [
                       {
@@ -92,10 +95,28 @@ class IndexView extends GetView<DashboardController> {
                         'page': const PembelianView()
                       },
                       {
-                        'icon': Icons.find_in_page_outlined,
+                        'icon': Icons.receipt_long,
                         'title': 'Transaksi',
                         'color': const Color(0xFFFF5C4D),
-                        'page': const TransaksiView()
+                        'page': TransaksiView()
+                      },
+                       {
+                        'icon': Icons.account_balance_wallet_rounded,
+                        'title': 'Penggajian',
+                        'color': Color.fromARGB(255, 22, 70, 110),
+                        'page': const PenggajianView()
+                      },
+                       {
+                        'icon': Icons.find_in_page_outlined,
+                        'title': 'Catatan Stok',
+                        'color': Color.fromARGB(255, 104, 64, 107),
+                        'page': const CatatanstokView()
+                      },
+                       {
+                        'icon': Icons.aod_outlined,
+                        'title': 'Catatan Keuangan',
+                        'color': Color.fromARGB(255, 151, 25, 33),
+                        'page': const CatatankeuanganView()
                       },
                     ];
                     return _buildDashboardCard(

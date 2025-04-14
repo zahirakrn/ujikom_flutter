@@ -2,73 +2,36 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:project_ujikom/app/data/transaksi_response.dart';
 import 'dart:convert';
-
+// Import model yang sudah kamu buat
 
 class TransaksiController extends GetxController {
-  var isLoading = false.obs;
-  var transaksiList = <TransaksiResponse>[].obs;
+  var transaksiList = <Data>[].obs;
+  var isLoading = true.obs;
 
   @override
   void onInit() {
-    fetchTransaksi();
     super.onInit();
-  }
+    fetchTransaksi();
 
-  Future<void> fetchTransaksi() async {
-    try {
-      isLoading(true);
-      final response =
-          await http.get(Uri.parse('http://172.20.10.4:8000/api/transaksi'));
-      if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
-        transaksiList.value =
-            data.map((e) => TransaksiResponse.fromJson(e)).toList();
-      } else {
-        Get.snackbar('Error', 'Gagal mengambil data transaksi');
+  }
+    Future<void> fetchTransaksi() async {
+      try {
+        isLoading(true);
+        final response = await http
+            .get(Uri.parse('http://192.168.0.177:8000/api/transaksi'));
+
+        if (response.statusCode == 200) {
+          print(response.body);
+          var jsonResponse = json.decode(response.body) as List<dynamic>;
+          transaksiList.value = jsonResponse.map((e) => Data.fromJson(e)).toList();
+        } else {
+          throw Exception('Failed to load data');
+        }
+      } catch (e) {
+        print('Error: $e');
+      } finally {
+        isLoading(false);
       }
-    } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
-    } finally {
-      isLoading(false);
     }
   }
 
-  Future<void> addTransaksi(Map<String, dynamic> transaksiData) async {
-    try {
-      isLoading(true);
-      final response = await http.post(
-        Uri.parse('http://172.20.10.4:8000/api/transaksi'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(transaksiData),
-      );
-      if (response.statusCode == 201) {
-        fetchTransaksi();
-        Get.snackbar('Success', 'Transaksi berhasil ditambahkan');
-      } else {
-        Get.snackbar('Error', 'Gagal menambahkan transaksi');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
-    } finally {
-      isLoading(false);
-    }
-  }
-
-  Future<void> deleteTransaksi(int id) async {
-    try {
-      isLoading(true);
-      final response = await http
-          .delete(Uri.parse('http://172.20.10.4:8000/api/transaksi/$id'));
-      if (response.statusCode == 200) {
-        transaksiList.removeWhere((item) => item.id == id);
-        Get.snackbar('Success', 'Transaksi berhasil dihapus');
-      } else {
-        Get.snackbar('Error', 'Gagal menghapus transaksi');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
-    } finally {
-      isLoading(false);
-    }
-  }
-}

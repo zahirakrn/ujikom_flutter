@@ -20,10 +20,10 @@ class ProfileController extends GetxController {
       isLoading(true);
       var response = await http.get(
         Uri.parse(
-            "http://192.168.162.63:8000/api/profile"), // ganti sesuai endpoint Laravel kamu
+            "http://192.168.0.177:8000/api/profile"), 
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer 55|gNirxqLzR4njVJDsT02CGhEsAJiuxk1bbtb0UHWocbf734bf', // Kalau pakai token
+          'Authorization': 'Bearer 76|mDfIoEm85cmwjNgGmQzsQjWDfp1KKW6sAunYYs0v25c34bf1', 
         },
       );
 

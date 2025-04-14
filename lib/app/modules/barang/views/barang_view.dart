@@ -71,7 +71,7 @@ class BarangView extends GetView<BarangController> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Nama Kategori: ${barang.idKategori ?? '-'}',
+                      'Nama Kategori: ${barang.kategori?.nama ?? '-'}',
                       style: const TextStyle(fontSize: 14),
                     ),
                     Text(
