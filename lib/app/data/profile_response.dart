@@ -1,4 +1,3 @@
-
 class ProfileResponse {
   int? id;
   String? name;

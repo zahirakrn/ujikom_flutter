@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:project_ujikom/app/data/penggajian_response.dart';
 import 'dart:convert';
 
+import 'package:project_ujikom/app/utils/api.dart';
+
 class PenggajianController extends GetxController {
   var isLoading = true.obs;
   var penggajianList = <PenggajianResponse>[].obs;
@@ -18,7 +20,7 @@ class PenggajianController extends GetxController {
       isLoading(true);
       var response = await http.get(
         Uri.parse(
-            'http://192.168.0.177:8000/api/penggajian'), 
+            'http://127.0.0.1:8000/api/penggajian'), 
         headers: {
           'Accept': 'application/json',
         },
@@ -38,4 +40,56 @@ class PenggajianController extends GetxController {
       isLoading(false);
     }
   }
+  Future<void> addPenggajian(PenggajianResponse data) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${BaseUrl.penggajian}'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(data.toJson()),
+      );
+      if (response.statusCode == 201) {
+        fetchPenggajian();
+        Get.snackbar("Sukses", "Data berhasil ditambahkan");
+      } else {
+        Get.snackbar("Gagal", "Gagal menambahkan data");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Terjadi kesalahan saat menambah data");
+    }
+  }
+
+  // ✅ UPDATE
+  Future<void> updatePenggajian(int id, PenggajianResponse data) async {
+    try {
+      final response = await http.put(
+        Uri.parse('${BaseUrl.penggajian}/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(data.toJson()),
+      );
+      if (response.statusCode == 200) {
+        fetchPenggajian();
+        Get.snackbar("Sukses", "Data berhasil diperbarui");
+      } else {
+        Get.snackbar("Gagal", "Gagal memperbarui data");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Terjadi kesalahan saat update");
+    }
+  }
+
+  // ✅ DELETE
+  Future<void> deletePenggajian(int id) async {
+    try {
+      final response = await http.delete(Uri.parse('${BaseUrl.penggajian}/$id'));
+      if (response.statusCode == 200) {
+        fetchPenggajian();
+        Get.snackbar("Sukses", "Data berhasil dihapus");
+      } else {
+        Get.snackbar("Gagal", "Gagal menghapus data");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Terjadi kesalahan saat hapus data");
+    }
+  }
 }
+

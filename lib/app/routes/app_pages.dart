@@ -91,10 +91,10 @@ class AppPages {
       page: () => const CatatanstokView(),
       binding: CatatanstokBinding(),
     ),
-    GetPage(
-      name: _Paths.CATATANKEUANGAN,
-      page: () => const CatatankeuanganView(),
-      binding: CatatankeuanganBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.CATATANKEUANGAN,
+    //   page: () => const CatatankeuanganView(),
+    //   binding: CatatankeuanganBinding(),
+    // ),
   ];
 }

@@ -10,6 +10,7 @@ class KategoriView extends GetView<KategoriController> {
   Widget build(BuildContext context) {
     final kategoriController = Get.put(KategoriController());
     final barangController = Get.put(BarangController());
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Kategori'),
@@ -42,8 +43,12 @@ class KategoriView extends GetView<KategoriController> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.edit, color: Colors.orange),
-                      onPressed: () => showEditDialog(context,
-                          kategoriController, kategori.id, kategori.nama),
+                      onPressed: () => showEditDialog(
+                        context,
+                        kategoriController,
+                        kategori.id,
+                        kategori.nama,
+                      ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
@@ -54,18 +59,32 @@ class KategoriView extends GetView<KategoriController> {
                 ),
                 onTap: () {
                   showKategoriModal(
-                      context, kategori.id, kategori.nama, barangController);
+                    context,
+                    kategori.id,
+                    kategori.nama,
+                    barangController,
+                  );
                 },
               ),
             );
           },
         );
       }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showAddDialog(context, kategoriController);
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
-  void showKategoriModal(BuildContext context, int idKategori,
-      String namaKategori, BarangController barangController) {
+  void showKategoriModal(
+    BuildContext context,
+    int idKategori,
+    String namaKategori,
+    BarangController barangController,
+  ) {
     final barangDalamKategori =
         barangController.getBarangByKategori(idKategori);
 
@@ -85,9 +104,10 @@ class KategoriView extends GetView<KategoriController> {
                     itemBuilder: (context, index) {
                       final barang = barangDalamKategori[index];
                       return ListTile(
-                        title: Text(barang.pembelian?.nama?? ''),
+                        title: Text(barang.pembelian?.nama ?? ''),
                         subtitle: Text(
-                            'Stok: ${barang.stok ?? '0'} ${barang.unit ?? ''}'),
+                          'Stok: ${barang.stok ?? '0'} ${barang.unit ?? ''}',
+                        ),
                       );
                     },
                   ),
@@ -103,8 +123,12 @@ class KategoriView extends GetView<KategoriController> {
     );
   }
 
-  void showEditDialog(BuildContext context, KategoriController controller,
-      int id, String nama) {
+  void showEditDialog(
+    BuildContext context,
+    KategoriController controller,
+    int id,
+    String nama,
+  ) {
     TextEditingController namaController = TextEditingController(text: nama);
 
     showDialog(
@@ -127,6 +151,39 @@ class KategoriView extends GetView<KategoriController> {
                 Get.back();
               },
               child: const Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showAddDialog(
+    BuildContext context,
+    KategoriController controller,
+  ) {
+    TextEditingController namaController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Tambah Kategori'),
+          content: TextField(
+            controller: namaController,
+            decoration: const InputDecoration(labelText: 'Nama Kategori'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () {
+                controller.addKategori(namaController.text);
+                Get.back();
+              },
+              child: const Text('Tambah'),
             ),
           ],
         );

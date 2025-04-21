@@ -18,7 +18,7 @@ class TransaksiController extends GetxController {
       try {
         isLoading(true);
         final response = await http
-            .get(Uri.parse('http://192.168.0.177:8000/api/transaksi'));
+            .get(Uri.parse('http://127.0.0.1:8000/api/transaksi'));
 
         if (response.statusCode == 200) {
           print(response.body);

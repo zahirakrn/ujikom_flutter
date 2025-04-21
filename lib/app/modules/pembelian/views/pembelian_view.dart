@@ -39,7 +39,6 @@ class PembelianView extends GetView<PembelianController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header: Nama barang dan tombol aksi
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -57,17 +56,18 @@ class PembelianView extends GetView<PembelianController> {
                             IconButton(
                               icon: const Icon(Icons.edit, color: Colors.blue),
                               onPressed: () {
-                                controller.editPembelian(pembelian);
+                                showEditDialog(context, controller, pembelian);
                               },
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
                               onPressed: () {
                                 controller.deletePembelian(pembelian.id!);
+                                Get.back(); // Menutup dialog setelah delete
                               },
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                     const SizedBox(height: 5),
@@ -98,6 +98,160 @@ class PembelianView extends GetView<PembelianController> {
           },
         );
       }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showAddDialog(context, controller),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void showAddDialog(BuildContext context, PembelianController controller) {
+    final perusahaanController = TextEditingController();
+    final namaController = TextEditingController();
+    final jumlahController = TextEditingController();
+    final hargaBeliController = TextEditingController();
+    final tanggalController = TextEditingController();
+    final alamatController = TextEditingController();
+
+    Get.defaultDialog(
+      title: "Tambah Pembelian",
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            TextField(
+              controller: perusahaanController,
+              decoration: const InputDecoration(labelText: "Perusahaan"),
+            ),
+            TextField(
+              controller: namaController,
+              decoration: const InputDecoration(labelText: "Nama Barang"),
+            ),
+            TextField(
+              controller: jumlahController,
+              decoration: const InputDecoration(labelText: "Jumlah"),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: hargaBeliController,
+              decoration: const InputDecoration(labelText: "Harga Beli"),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: tanggalController,
+              decoration: const InputDecoration(labelText: "Tanggal"),
+            ),
+            TextField(
+              controller: alamatController,
+              decoration: const InputDecoration(labelText: "Alamat"),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                final data = {
+                  "nama_perusahaan": perusahaanController.text,
+                  "nama": namaController.text,
+                  "jumlah": int.tryParse(jumlahController.text) ?? 0,
+                  "harga_beli": int.tryParse(hargaBeliController.text) ?? 0,
+                  "tanggal": tanggalController.text,
+                  "alamat": alamatController.text,
+                };
+
+                controller.addPembelian(data);
+
+                // Menampilkan notifikasi setelah berhasil menambah data
+                Get.snackbar(
+                  "Berhasil",
+                  "Pembelian berhasil ditambahkan.",
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.green,
+                  colorText: Colors.white,
+                  duration: const Duration(seconds: 2),
+                );
+
+                Get.back(); // Tutup dialog setelah simpan
+              },
+              child: const Text("Simpan"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showEditDialog(
+      BuildContext context, PembelianController controller, pembelian) {
+    final perusahaanController =
+        TextEditingController(text: pembelian.namaPerusahaan);
+    final namaController = TextEditingController(text: pembelian.nama);
+    final jumlahController =
+        TextEditingController(text: pembelian.jumlah.toString());
+    final hargaBeliController =
+        TextEditingController(text: pembelian.hargaBeli.toString());
+    final tanggalController = TextEditingController(text: pembelian.tanggal);
+    final alamatController = TextEditingController(text: pembelian.alamat);
+
+    Get.defaultDialog(
+      title: "Edit Pembelian",
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            TextField(
+              controller: perusahaanController,
+              decoration: const InputDecoration(labelText: "Perusahaan"),
+            ),
+            TextField(
+              controller: namaController,
+              decoration: const InputDecoration(labelText: "Nama Barang"),
+            ),
+            TextField(
+              controller: jumlahController,
+              decoration: const InputDecoration(labelText: "Jumlah"),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: hargaBeliController,
+              decoration: const InputDecoration(labelText: "Harga Beli"),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: tanggalController,
+              decoration: const InputDecoration(labelText: "Tanggal"),
+            ),
+            TextField(
+              controller: alamatController,
+              decoration: const InputDecoration(labelText: "Alamat"),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                final updatedData = {
+                  "nama_perusahaan": perusahaanController.text,
+                  "nama": namaController.text,
+                  "jumlah": int.tryParse(jumlahController.text) ?? 0,
+                  "harga_beli": int.tryParse(hargaBeliController.text) ?? 0,
+                  "tanggal": tanggalController.text,
+                  "alamat": alamatController.text,
+                };
+
+                controller.updatePembelian(pembelian.id, updatedData);
+
+                // Menampilkan notifikasi setelah berhasil update data
+                Get.snackbar(
+                  "Berhasil",
+                  "Pembelian berhasil diperbarui.",
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.blue,
+                  colorText: Colors.white,
+                  duration: const Duration(seconds: 2),
+                );
+
+                Get.back(); // Tutup dialog setelah simpan
+              },
+              child: const Text("Simpan"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -53,20 +53,6 @@ class BarangView extends GetView<BarangController> {
                             ),
                           ),
                         ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () =>
-                                  controller.showEditDialog(barang),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () =>
-                                  controller.deleteBarang(barang.id!),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                     const SizedBox(height: 6),

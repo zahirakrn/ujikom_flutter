@@ -33,21 +33,37 @@ class KategoriController extends GetxController {
     }
   }
 
-  Future<void> updateKategori(int id, String namaKategori) async {
+  Future<void> addKategori(String nama) async {
+    try {
+      final response = await http.post(
+        Uri.parse(BaseUrl.kategoris),
+        body: {'nama': nama},
+      );
+      if (response.statusCode == 201) {
+        fetchKategori(); // Refresh setelah tambah
+        Get.snackbar('Berhasil', 'Kategori berhasil ditambahkan');
+      } else {
+        Get.snackbar('Gagal', 'Gagal menambahkan kategori');
+      }
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
+
+  void updateKategori(int id, String nama) async {
     try {
       final response = await http.put(
         Uri.parse('${BaseUrl.kategoris}/$id'),
-        body: {'nama': namaKategori},
+        body: {'nama': nama},
       );
-
       if (response.statusCode == 200) {
         fetchKategori();
-        Get.snackbar('Sukses', 'Kategori berhasil diperbarui');
+        Get.snackbar('Berhasil', 'Kategori berhasil diperbarui');
       } else {
-        Get.snackbar('Error', 'Gagal memperbarui kategori');
+        Get.snackbar('Gagal', 'Gagal memperbarui kategori');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
+      Get.snackbar('Error', e.toString());
     }
   }
 

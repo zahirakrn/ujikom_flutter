@@ -18,7 +18,7 @@ class CatatanstokController extends GetxController {
   Future<void> fetchCatatanStok() async {
     try {
      
-      final response = await http.get(Uri.parse('http://192.168.0.177:8000/api/catatanstok'));
+      final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/catatanstok'));
 
       if (response.statusCode == 200) { 
         List jsonResponse = json.decode(response.body);

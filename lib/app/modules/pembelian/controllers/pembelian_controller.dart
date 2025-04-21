@@ -43,107 +43,69 @@ class PembelianController extends GetxController {
     }
   }
 
-  void editPembelian(Data pembelian) {
- 
-    namaC.text = pembelian.nama ?? '';
-    jumlahC.text = pembelian.jumlah?.toString() ?? '';
-    hargaBeliC.text = pembelian.hargaBeli?.toString() ?? '';
-    alamatC.text = pembelian.alamat ?? '';
-
-    showEditDialog(pembelian.id!);
-  }
-
-  void showEditDialog(int id) {
-    Get.defaultDialog(
-      title: 'Edit Pembelian',
-      content: Column(
-        children: [
-          TextField(
-            controller: namaC,
-            decoration: const InputDecoration(labelText: 'Nama Barang'),
-          ),
-          TextField(
-            controller: jumlahC,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Jumlah'),
-          ),
-          TextField(
-            controller: hargaBeliC,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Harga Beli'),
-          ),
-          TextField(
-            controller: alamatC,
-            decoration: const InputDecoration(labelText: 'Alamat'),
-          ),
-        ],
-      ),
-      textConfirm: 'Simpan',
-      textCancel: 'Batal',
-      confirmTextColor: Colors.white,
-      onConfirm: () {
-        updatePembelian(id);
-        Get.back(); // tutup dialog
-      },
-    );
-  }
-
-  void updatePembelian(int id) async {
+  Future<void> addPembelian(Map<String, dynamic> data) async {
     try {
-      final response = await http.put(
-        Uri.parse('${BaseUrl.pembelian}/$id'),
+      isLoading.value = true;
+      final response = await http.post(
+        Uri.parse(BaseUrl.pembelian),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          "nama": namaC.text,
-          "jumlah": int.tryParse(jumlahC.text) ?? 0,
-          "harga_beli": int.tryParse(hargaBeliC.text) ?? 0,
-          "alamat": alamatC.text,
-        }),
+        body: json.encode(data),
       );
 
-      if (response.statusCode == 200) {
-        Get.snackbar('Berhasil', 'Data berhasil diperbarui');
-        fetchPembelian(); 
+      if (response.statusCode == 201) {
+        // optional: tampilkan notifikasi
+        Get.snackbar("Sukses", "Data pembelian berhasil ditambahkan");
+
+        // fetch ulang data dari API
+        await fetchPembelian();
       } else {
-        Get.snackbar('Gagal', 'Gagal update data');
+        final msg =
+            json.decode(response.body)['message'] ?? "Gagal menambahkan";
+        Get.snackbar("Error", msg);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
+      Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  void deletePembelian(int id) async {
-    final confirm = await Get.dialog<bool>(
-      AlertDialog(
-        title: const Text('Konfirmasi'),
-        content: const Text('Yakin ingin menghapus data ini?'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(result: false),
-            child: const Text('Batal'),
-          ),
-          TextButton(
-            onPressed: () => Get.back(result: true),
-            child: const Text('Hapus', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
+  Future<void> updatePembelian(int id, Map<String, dynamic> data) async {
+    try {
+      isLoading.value = true;
 
-    if (confirm == true) {
-      try {
-        final response =
-            await http.delete(Uri.parse('${BaseUrl.pembelian}/$id'));
+      final response = await http.put(
+        Uri.parse('${BaseUrl.pembelian}/$id'), // sesuaikan URL
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(data),
+      );
 
-        if (response.statusCode == 200) {
-          pembelianList.removeWhere((item) => item.id == id);
-          Get.snackbar('Sukses', 'Data berhasil dihapus');
-        } else {
-          Get.snackbar('Gagal', 'Tidak dapat menghapus data');
-        }
-      } catch (e) {
-        Get.snackbar('Error', 'Terjadi kesalahan: $e');
+      if (response.statusCode == 200) {
+        Get.snackbar("Berhasil", "Data berhasil diperbarui");
+        await fetchPembelian(); // refresh list
+      } else {
+        final msg = json.decode(response.body)['message'] ?? "Gagal update";
+        Get.snackbar("Error", msg);
       }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> deletePembelian(int id) async {
+    try {
+      final response = await http.delete(Uri.parse('${BaseUrl.pembelian}/$id'));
+
+      if (response.statusCode == 200) {
+        pembelianList.removeWhere((element) => element.id == id);
+        Get.snackbar("Sukses", "Data pembelian dihapus");
+      } else {
+        Get.snackbar("Error", "Gagal menghapus data");
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
     }
   }
 }
